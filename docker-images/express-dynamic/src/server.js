@@ -1,8 +1,24 @@
 const Chance    = require('chance');
 const Express   = require('express');
+const OS        = require('os');
 
 let chance      = new Chance();
 let app         = new Express();
+let ipaddress   = null;
+let ifaces      = OS.networkInterfaces();
+Object.keys(ifaces).forEach(function(ifname) {
+
+    let alias = 0;
+
+    ifaces[ifname].forEach(function(iface) {
+
+        if(iface.family != 'IPv4' || iface.internal !== false)
+            return;
+
+        ipaddress   = iface.address;
+    });
+});
+
 
 app.get('/', function(req, res) {
 
@@ -15,7 +31,10 @@ app.get('/', function(req, res) {
             author: chance.name()
         });
 
-    res.send(response);
+    res.send({
+        ipAddress: ipaddress,
+        data: response
+    });
 });
 
 app.listen(3000, function() {
