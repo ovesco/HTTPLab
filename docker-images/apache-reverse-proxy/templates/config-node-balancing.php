@@ -5,10 +5,13 @@
 <VirtualHost *:80>
     ServerName demo.res.ch
 
-    <Location "/balancer-manager">
+    <Location /balancer-manager>
         SetHandler balancer-manager
-        Require host demo.res.ch
+        Order Deny,Allow
+        Deny from all
+        Allow from all
     </Location>
+    ProxyPass '/balancer-manager' !
 
     <Proxy balancer://dynamic>
         <?php for($i = 0; $i < count($dynamics); $i++) { ?>
