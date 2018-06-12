@@ -4,10 +4,7 @@ set -e
 echo "Setup for the RES lab..."
 echo "Statics url: $STATICS"
 echo "Dynamics url: $DYNAMICS"
-php /var/apache2/templates/config-node-balancing.php > /etc/apache2/sites-available/001-reverse-proxy.conf 
-
-
-
+php /var/apache2/templates/config-node-balancing-sticky.php > /etc/apache2/sites-available/001-reverse-proxy.conf 
 
 
 # Note: we don't just use "apache2ctl" here because it itself is just a shell-script wrapper around apache2 which provides extra functionality like "apache2ctl start" for launching apache2 in the background.
