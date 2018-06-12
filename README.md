@@ -3,6 +3,7 @@ Guillaume Hochet & Guillaume Blanco
 
 ## Step 1 apache static
 branch: step1
+
 Créer une image docker pour apache-php
 - Se mettre dans le répertoire apache-php
 - Faire un `docker build -t res/apache_php .`
@@ -13,6 +14,7 @@ Fichiers de configuration apache dans `/etc/apache2`. Pour y accéder dans un co
 
 ## Step 2 express dynamic
 branch: step2
+
 On se base sur l'image docker nodejs officielle LTS
 `src` contient tous les fichiers, ne pas oublier de faire un .gitignore et d'y ajouter `node_modules`
 
@@ -25,6 +27,7 @@ Pour lancer le container:
 
 ## Step 3 static reverse proxy
 branch: step3-apache-reverse-proxy
+
 On va créer un container docker spécialement pour le reverse proxy.
 Tout d'abord on doit lancer les deux containers requis
 - Lancer un container apache_php (port 80): `docker run -d --name apache_static res/apache_php` appelé apache_static
@@ -32,6 +35,7 @@ Tout d'abord on doit lancer les deux containers requis
 - Récupérer les adresses IP des container avec `docker inspect <container> | grep "IPAddress"`
 
 Dans notre cas on obtient 172.17.0.2 pour apache_static et 172.17.0.3 pour express_dynamic
+
 On peut ensuite lancer le container de reverse proxy
 - Se placer dans docker-images/apache-reverse-proxy
 - Editer le fichier /conf/sites-available/001-reverse-proxy.conf
@@ -43,6 +47,7 @@ On peut ensuite lancer le container de reverse proxy
 
 ## Step 4 ajax jquery
 branch: step4-ajax-jquery
+
 Pour réaliser cette étape, il faut tout d'abord fermer les containers existants.
 On modifie ensuite le code html de l'image `apache_php` pour y inclure un fichier javascript qui s'occupera
 de pull des informations en ajax. 
@@ -53,6 +58,7 @@ Relancer ensuite les containers comme dans l'étape 3, puis se rendre sur demo.r
 
 ## Step 5 Dynamic reverse proxy
 Branche: step5-dynamic-configuration
+
 Il est possible de définir des variables d'environnement pour un container donné, on y passe ainsi les adresses
 IPs afin de les utiliser dans un script au lancement du container.
 - Créer un template php permettant de générer le contenu du fichier `001-reverse-proxy.conf` et qui y écrit les
@@ -76,6 +82,7 @@ Credentials locaux: admin password
 
 ### Node balancing
 branche: BONUS-node-balancing
+
 Source: https://httpd.apache.org/docs/2.4/howto/reverse_proxy.html
 Pour fonctionner, on doit modifier le reverse proxy défini précédemment. On s'appuie sur les modules mod_proxy_balancer et mod_lbmethod_byrequests pour
 y arriver.
@@ -91,6 +98,7 @@ On peut également accéder au manager apache depuis `demo.res.ch:8080/balancer-
 
 ### Sticky sessions
 branch BONUS-sticky-sessions
+
 On se base sur le node balancing pour illustrer le concept. Dans le cas précédent, l'adresse IP du container changeait automatiquement. Le but ici est de 
 conserver la même.
 
